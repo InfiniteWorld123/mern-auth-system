@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from "cors";
 import helmet from "helmet";
-import { PORT } from './constants/env.js';
+import { FRONTEND_URL, NODE_ENV, PORT } from './constants/env.js';
 import connectToMongoDB from './config/db.js';
 import { errorHandler } from "./middlewares/errorhandler.middleware.js";
 import appLimiter from "./utils/AppLimiter.js";
@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: NODE_ENV === "production" ? FRONTEND_URL : "http://localhost:5173",
     credentials: true,
 }))
 app.use("/api/v1/users", appLimiter, authRoutes);
