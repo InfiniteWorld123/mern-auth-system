@@ -1,8 +1,16 @@
+import { sendResponse } from "../utils/sendResponse.js"
+
 export const validate = (schema) => (req, res, next) => {
     try {
         req.body = schema.parse(req.body);
         next();
     } catch (err) {
-        return res.status(400).json({ error: err.errors });
+        return sendResponse({
+            res,
+            success: false,
+            status: 400,
+            message: err.message,
+            payload: err
+        })
     }
 };
