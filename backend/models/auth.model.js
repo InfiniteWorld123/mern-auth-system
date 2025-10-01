@@ -10,6 +10,7 @@ const authSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
+            lowerCase: true,
         },
         password: {
             type: String,
@@ -23,11 +24,10 @@ const authSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        verificationToken: String,
-        verificationTokenExpiresAt: Date,
+        verificationCode: String,
+        verificationCodeExpiresAt: Date,
         resetPasswordToken: String,
-        resetPasswordExpiresAt: Date,
-
+        resetPasswordTokenExpiresAt: Date,
     },
     { timestamps: true }
 );
