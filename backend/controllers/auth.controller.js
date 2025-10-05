@@ -177,7 +177,8 @@ export const resetPassword = catchTransactionError(async (req, res, next, sessio
     const userWithToken = await User.findOne({ resetPasswordToken: token }, null, { session });
 
     if (!userWithToken) throw new AppError("Invalid reset password token", 401);
-    if (userWithToken.resetPasswordExpiresAt.getTime() <= Date.now()) throw new AppError("Token is expired", 401);
+    if (userWithToken.resetPasswordExpiresAt <= Date.now()) throw new AppError("Token is expired", 401);
+
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
