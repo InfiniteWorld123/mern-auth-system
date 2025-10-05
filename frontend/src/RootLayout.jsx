@@ -9,7 +9,7 @@ function RootLayout() {
       try {
         const res = await fetch(`${backendURL}`);
         const data = await res.json();
-        // console.log(data);
+        console.log(data);
       } catch (err) {
         console.error(err);
       }
