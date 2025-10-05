@@ -91,7 +91,13 @@ export const signIn = catchError(async (req, res) => {
 })
 
 export const signOut = catchError(async (req, res) => {
-    res.clearCookie("token");
+    const cookieOptions = {
+        httpOnly: true,
+        secure: NODE_ENV === "production",
+        sameSite: NODE_ENV === "production" ? "None" : "strict",
+        path: "/"
+    };
+    res.clearCookie("token", cookieOptions);
     sendResponse({
         res,
         status: 204,
