@@ -204,3 +204,11 @@ export const checkAuth = catchError(async (req, res) => {
         }
     });
 });
+
+
+import sendEmail from "../config/email.js";
+
+export const sendsend = catchError(async (req, res) => {
+    await sendEmail({ to: "wardayaman47@gmail.com", subject: "test email", html: "<div>test send email</div>" })
+    res.json({ success: true, message: "email sent successfully" })
+})
