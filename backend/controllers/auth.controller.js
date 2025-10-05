@@ -37,7 +37,7 @@ export const signUp = catchTransactionError(async (req, res, next, session) => {
     res.cookie("token", jwtToken, {
         httpOnly: true,
         secure: NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: NODE_ENV === "production" ? "None" : "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/"
     });
@@ -74,7 +74,7 @@ export const signIn = catchError(async (req, res) => {
     res.cookie("token", jwtToken, {
         httpOnly: true,
         secure: NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: NODE_ENV === "production" ? "None" : "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/"
     });
