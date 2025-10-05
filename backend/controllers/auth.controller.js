@@ -6,6 +6,7 @@ import { AppError } from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
 import User from "../models/auth.model.js"
 import bcrypt from "bcrypt"
+import { sendResetPasswordEmail, sendVerifyEmail } from "../services/email.service.js";
 
 
 export const signUp = catchTransactionError(async (req, res, next, session) => {
@@ -40,6 +41,13 @@ export const signUp = catchTransactionError(async (req, res, next, session) => {
         sameSite: NODE_ENV === "production" ? "None" : "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/"
+    });
+
+    await sendVerifyEmail({ 
+        to: email, 
+        subject: "Verify Your Email", 
+        verificationCode: code, 
+        verificationLink: `${FRONTEND_URL}/verify-email` 
     });
 
     sendResponse({
@@ -122,8 +130,12 @@ export const verifyEmail = catchTransactionError(async (req, res, next, session)
 
     await user.save({ session });
 
-    // إرسال إيميل الترحيب
-    // ... some logic
+    await sendWelcomeEmail({ 
+        to: email, 
+        subject: "Welcome to our auth system", 
+        name: user.name, 
+        loginLink: `${FRONTEND_URL}/login` 
+    });
 
     sendResponse({
         res,
@@ -143,7 +155,6 @@ export const forgotPassword = catchError(async (req, res) => {
     const email = req.body.email.toLowerCase();
     const user = await User.findOne({ email });
 
-    // it is send it as not an error, for not letting the attacker know's if the email exist
     if (!user) {
         return sendResponse({
             res,
@@ -159,8 +170,11 @@ export const forgotPassword = catchError(async (req, res) => {
     user.resetPasswordTokenExpiresAt = expiresAt;
     await user.save();
 
-    // 4. إرسال الرابط/الـ Token في بريد إلكتروني
-    // ... logic to send email with the token ...
+    await sendResetPasswordEmail({ 
+        to: email, 
+        subject: "Reset Password", 
+        resetPasswordLink: `${FRONTEND_URL}/reset-password/${token}` 
+    });
 
     sendResponse({
         res,
@@ -178,7 +192,6 @@ export const resetPassword = catchTransactionError(async (req, res, next, sessio
 
     if (!userWithToken) throw new AppError("Invalid reset password token", 401);
     if (userWithToken.resetPasswordExpiresAt <= Date.now()) throw new AppError("Token is expired", 401);
-
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -211,11 +224,3 @@ export const checkAuth = catchError(async (req, res) => {
         }
     });
 });
-
-
-import sendEmail from "../config/email.js";
-
-export const sendsend = catchError(async (req, res) => {
-    await sendEmail({ to: "wardayaman47@gmail.com", subject: "test email", html: "<div>test send email</div>" })
-    res.json({ success: true, message: "email sent successfully" })
-})
