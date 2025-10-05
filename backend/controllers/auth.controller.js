@@ -6,7 +6,7 @@ import { AppError } from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
 import User from "../models/auth.model.js"
 import bcrypt from "bcrypt"
-import { sendResetPasswordEmail, sendVerifyEmail } from "../services/email.service.js";
+import { sendResetPasswordEmail, sendVerifyEmail, sendWelcomeEmail } from "../services/email.service.js";
 
 
 export const signUp = catchTransactionError(async (req, res, next, session) => {
@@ -131,7 +131,7 @@ export const verifyEmail = catchTransactionError(async (req, res, next, session)
     await user.save({ session });
 
     await sendWelcomeEmail({ 
-        to: email, 
+        to: user.email, 
         subject: "Welcome to our auth system", 
         name: user.name, 
         loginLink: `${FRONTEND_URL}/sign-in` 

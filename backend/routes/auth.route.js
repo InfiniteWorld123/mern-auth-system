@@ -20,5 +20,4 @@ authRouter.post("/reset-password/:token", validate(resetPasswordSchema), resetPa
 
 authRouter.get("/check-auth", verifyToken, checkAuth);
 
-
 export default authRouter;
