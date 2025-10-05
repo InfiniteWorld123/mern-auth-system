@@ -1,6 +1,6 @@
 import { catchError, catchTransactionError } from "../utils/catchError.js";
 import { sendResponse } from "../utils/sendResponse.js"; // This utility is defined below
-import { JWT_SECRET, NODE_ENV } from "../constants/env.js"
+import { FRONTEND_URL, JWT_SECRET, NODE_ENV } from "../constants/env.js"
 import { createResetToken, createVerificationCode } from "../utils/generate.js";
 import { AppError } from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
@@ -134,7 +134,7 @@ export const verifyEmail = catchTransactionError(async (req, res, next, session)
         to: email, 
         subject: "Welcome to our auth system", 
         name: user.name, 
-        loginLink: `${FRONTEND_URL}/login` 
+        loginLink: `${FRONTEND_URL}/sign-in` 
     });
 
     sendResponse({
