@@ -6,10 +6,12 @@ import connectToMongoDB from './config/db.js';
 import { errorHandler } from "./middlewares/errorhandler.middleware.js";
 import appLimiter from "./utils/AppLimiter.js";
 import authRoutes from "./routes/auth.route.js"
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser()); 
 app.use(helmet());
 app.use(cors({
     origin: NODE_ENV === "production" ? FRONTEND_URL : "http://localhost:5173",

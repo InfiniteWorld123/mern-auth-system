@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { signUp, signIn, signOut, verifyEmail, forgotPassword, resetPassword, checkAuth } from "../controllers/auth.controller.js";
-import { validate } from "../validation/validate.js"
-import { signupSchema, signinSchema, resetPasswordSchema, emailSchema } from "../validation/auth.validation.js"
+import { validate } from "../middlewares/validate.middleware.js"
+import { signupSchema, signinSchema, resetPasswordSchema } from "../validation/auth.validation.js"
 import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 
 const authRouter = Router();
